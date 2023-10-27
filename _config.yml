@@ -3,13 +3,14 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 秋风清
+title: 张子熙
 subtitle:  '早知如此绊人心，何如当初莫相识。'
 description: '秋风清，秋月明。'
 keywords:
 author: 张子熙
 language: zh-CN
-timezone: '17423zixi1739@gmail.com'
+timezone:
+email:'17423zixi@gmail.com'
 
 # URL
 
