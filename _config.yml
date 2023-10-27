@@ -3,15 +3,16 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle: ''
-description: ''
+title: 秋风清
+subtitle:  '早知如此绊人心，何如当初莫相识。'
+description: '秋风清，秋月明。'
 keywords:
-author: John Doe
-language: en
-timezone: ''
+author: 张子熙
+language: zh-CN
+timezone: '17423zixi1739@gmail.com'
 
 # URL
+
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
 
 url: http://Rson9.github.io/
@@ -46,7 +47,7 @@ relative_link: false
 future: true
 highlight:
   enable: true
-  line_number: true
+  line_number: false
   auto_detect: false
   tab_replace: ''
   wrap: true
