@@ -1,0 +1,74 @@
+---
+title: page
+date: 2023-12-04 18:30:45
+tags: 排序
+---
+
+# 堆排序
+
+1. 什么是堆排序？
+
+   通过二叉树模型进行的递归式原址排序。
+
+2. 实现过程。
+
+
+```c++
+#include <iostream>
+using namespace std;
+int n, heap_size;
+void max_heapify(int heap[], int a)
+{
+    int l = a << 1, r = (a << 1) + 1, largest = a;
+    if (l <= heap_size && heap[l] > heap[largest])
+    {
+        largest = l;
+    }
+    if (r <= heap_size && heap[r] > heap[largest])
+    {
+        largest = r;
+    }
+    if (largest != a)
+    {
+        int temp;
+        temp = heap[a];
+        heap[a] = heap[largest];
+        heap[largest] = temp;
+        max_heapify(heap, largest);
+    }
+}
+void maxn_heapify(int heap[])
+{
+
+    for (int i = n >> 1 ; i >= 1; i--)
+    {
+        max_heapify(heap, i);
+    }
+    for (int i = n; i >= 2; i--)
+    {
+        int temp;
+        temp = heap[1];
+        heap[1] = heap[i];
+        heap[i] = temp;
+        heap_size--;
+        max_heapify(heap, 1);
+    }
+}
+int main()
+{
+    cin >> n;
+    int heap[n + 1];
+    for (int i = 1; i <= n; i++)
+    {
+        cin >> heap[i];
+    }
+    heap_size = n;
+    maxn_heapify(heap);
+    for (int i = 1; i <= n; i++)
+    {
+        cout << heap[i] << " \n"[i == n];
+    }
+    return 0;
+}
+```
+
