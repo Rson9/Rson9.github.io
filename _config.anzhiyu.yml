@@ -123,8 +123,8 @@ local_search:
 
 # MathJax
 mathjax:
-  enable: false
-  per_page: false
+  enable: true
+  per_page: true
 
 # KaTeX
 katex:
@@ -1023,13 +1023,13 @@ home_top:
   subTitle: 万物可爱。
   siteText: anheyu.com
   category:
-    - name: 前端
-      path: /categories/前端开发/
+    - name: C++
+      path: /categories/C++/
       shadow: var(--anzhiyu-shadow-blue)
       class: blue
       icon: anzhiyu-icon-dove
-    - name: 大学
-      path: /categories/大学生涯/
+    - name: Java
+      path: /categories/Java/
       shadow: var(--anzhiyu-shadow-red)
       class: red
       icon: anzhiyu-icon-fire
@@ -1044,11 +1044,9 @@ home_top:
     swiper_css: https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper.min.css #swiper css依赖
     swiper_js: https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper.min.js #swiper js依赖
   banner:
-    enable: false
-    tips: 新品主题
-    title: Theme-AnZhiYu
+    title: Baidu
     image: https://bu.dusays.com/2023/05/13/645fa3cf90d70.webp
-    link: https://docs.anheyu.com/
+    link: https://baidu.com/
 
 # 朋友圈配置
 friends_vue:
