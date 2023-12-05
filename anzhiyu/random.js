@@ -1,1 +1,1 @@
-var posts=["2023/12/04/堆排序/","2023/12/05/烦恼的高考志愿/","2023/10/20/过河卒/"];function toRandomPost(){pjax.loadUrl('/'+posts[Math.floor(Math.random() * posts.length)]);};
+var posts=["2023/12/05/烦恼的高考志愿/","2023/10/20/过河卒/","2023/12/04/堆排序/"];function toRandomPost(){pjax.loadUrl('/'+posts[Math.floor(Math.random() * posts.length)]);};
