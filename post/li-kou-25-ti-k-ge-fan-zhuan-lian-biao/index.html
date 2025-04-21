@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="description" content="秋风清，秋月明。" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>力扣25题-K个反转链表 | Weak</title>
+<link rel="shortcut icon" href="https://Rson9.github.io/favicon.ico?v=1745244200358">
+<link rel="stylesheet" href="https://Rson9.github.io/styles/main.css">
+
+
+  <link rel="canonical" href="https://Rson9.github.io/post/li-kou-25-ti-k-ge-fan-zhuan-lian-biao/" />
+  <meta name="socialText" content="" />
+  <meta name="description" content="问题拆分
+由于是每K个位置，进行一次反转，所以我们需要先设计指定head到指定tail的反转，返回新的链表指向。
+同时我们需要构造一个虚拟节点hair，用于最后返回新的链表指向。
+同时，在遍历中，每次记录上次反转的最后一个节点为prev和当..." />
+  <meta name="referrer" content="always" />
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/katex.min.css">
+  <script defer src="https://Rson9.github.io/media/scripts/katex.min.js"></script>
+  
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/prism.css">
+  
+    
+  
+</head>
+
+<body class="is-preload">
+  <!-- Wrapper -->
+  <div id="wrapper">
+
+    <!-- Header -->
+<header id="header">
+  <div class="inner">
+    <!-- Logo -->
+    <a href="https://Rson9.github.io" class="logo">
+      <span class="symbol"
+        ><img
+          src="https://Rson9.github.io/images/avatar.png?v=1745244200358"
+          alt=""
+        />
+      </span>
+      <div class="site-title"> Weak </div>
+    </a>
+
+    <!-- Nav -->
+    <nav>
+      <ul>
+        <li><a href="#menu">Menu</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Menu -->
+<nav id="menu">
+  <ul>
+    
+    
+      <li><a href="/" class="menu">
+        首页
+      </a></li>
+      
+    
+    
+      <li><a href="/archives" class="menu">
+        归档
+      </a></li>
+      
+    
+    
+      <li><a href="/tags" class="menu">
+        标签
+      </a></li>
+      
+    
+    
+      <li><a href="/post/about" class="menu">
+        关于
+      </a></li>
+      
+    
+  </ul>
+</nav>
+
+    <!-- Main -->
+    <div id="main">
+      <div class="inner">
+        <div class="post-pagetitle">
+          <h1>
+            力扣25题-K个反转链表
+          </h1>
+        </div>
+        <div class="post-info">
+          <time class="post-time">
+            2025-04-21
+          </time>
+          <span class="read-times">
+            2 min read
+          </span>
+          
+        </div>
+        
+        <div class="post-content-wrapper">
+          <div class="post-content">
+            <h1 id="问题拆分">问题拆分</h1>
+<p>由于是每K个位置，进行一次反转，所以我们需要先设计指定head到指定tail的反转，返回新的链表指向。<br>
+同时我们需要构造一个虚拟节点hair，用于最后返回新的链表指向。<br>
+同时，在遍历中，每次记录上次反转的最后一个节点为prev和当前tail的下一个节点next，来处理当前反转之后的前置链接和后置链接。最后返回hair.Next就行了。</p>
+<pre><code class="language-go">/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reverseKGroup(head *ListNode, k int) *ListNode {
+    hair := &amp;ListNode{Next:head}
+
+    prev := hair
+
+    for head!=nil{
+        tail := prev
+        for i:=1;i&lt;=k;i++{
+            tail = tail.Next
+            if tail == nil{
+                return hair.Next
+            }
+        }
+        nex := tail.Next
+        head,tail = MyReverse(head,tail)
+        prev.Next=head
+        tail.Next = nex
+        prev = tail
+        head = nex
+    }
+    return hair.Next
+}
+
+func MyReverse(head,tail *ListNode)(*ListNode,*ListNode){
+    prev := tail.Next
+    p:=head
+    for prev !=tail{
+        next:=p.Next
+        p.Next = prev
+        prev = p
+        p = next
+    }
+    return tail,head
+}
+</code></pre>
+
+          </div>
+          <div class="toc-container">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%97%AE%E9%A2%98%E6%8B%86%E5%88%86">问题拆分</a></li>
+</ul>
+
+          </div>
+        </div>
+
+        <div class="page-count">
+          
+
+          
+        </div>
+      </div>
+
+      <div class="post-pagination inner">
+        
+        <div class="next-post">
+          <div>
+            <a href="https://Rson9.github.io/post/fmt/">下一篇</a>
+          </div>
+        </div>
+        
+        
+      </div>
+
+    </div>
+
+    <!-- back to top -->
+    <button oneclik="topFunction()" id="BackToTop">
+      TOP
+    </button>
+
+    <div class="post-comment inner">
+      <div class="post-comment">
+        
+
+
+
+
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer id="footer">
+  <div class="inner">
+    <section>
+      <h2>Follow</h2>
+      <ul class="icons">
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </section>
+    <ul class="copyright">
+      <li>
+        <a href="https://Rson9.github.io/atom.xml" target="_blank">
+          RSS
+        </a> 
+      </li>
+      <li><a href="https://github.com/wherelse/gridea-theme-phantom">Theme Phantom</a></li>
+      <li>Welcome to My Blog</li>
+      
+    </ul>
+  </div>
+</footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://Rson9.github.io/media/scripts/jquery.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/browser.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/breakpoints.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/util.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/main.js"></script>
+  
+  <script src="https://Rson9.github.io/media/scripts/prism.js"></script>
+  <script>
+    Prism.highlightAll();
+  </script>
+  
+  <script>
+    post_scroll();
+    back_to_top();
+  </script>
+</body>
+
+</html>

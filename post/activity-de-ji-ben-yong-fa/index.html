@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="description" content="秋风清，秋月明。" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>3.2 Activity的基本用法 | Weak</title>
+<link rel="shortcut icon" href="https://Rson9.github.io/favicon.ico?v=1745244200358">
+<link rel="stylesheet" href="https://Rson9.github.io/styles/main.css">
+
+
+  <link rel="canonical" href="https://Rson9.github.io/post/activity-de-ji-ben-yong-fa/" />
+  <meta name="socialText" content="" />
+  <meta name="description" content="1.主Activity的创建
+在主目录的src中创建一个kt文件，命名为 MainActivity ,继承于 AppCompatActivity 类，重写 onCreate() 方法。
+class MainActivity : AppCom..." />
+  <meta name="referrer" content="always" />
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/katex.min.css">
+  <script defer src="https://Rson9.github.io/media/scripts/katex.min.js"></script>
+  
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/prism.css">
+  
+    
+  
+</head>
+
+<body class="is-preload">
+  <!-- Wrapper -->
+  <div id="wrapper">
+
+    <!-- Header -->
+<header id="header">
+  <div class="inner">
+    <!-- Logo -->
+    <a href="https://Rson9.github.io" class="logo">
+      <span class="symbol"
+        ><img
+          src="https://Rson9.github.io/images/avatar.png?v=1745244200358"
+          alt=""
+        />
+      </span>
+      <div class="site-title"> Weak </div>
+    </a>
+
+    <!-- Nav -->
+    <nav>
+      <ul>
+        <li><a href="#menu">Menu</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Menu -->
+<nav id="menu">
+  <ul>
+    
+    
+      <li><a href="/" class="menu">
+        首页
+      </a></li>
+      
+    
+    
+      <li><a href="/archives" class="menu">
+        归档
+      </a></li>
+      
+    
+    
+      <li><a href="/tags" class="menu">
+        标签
+      </a></li>
+      
+    
+    
+      <li><a href="/post/about" class="menu">
+        关于
+      </a></li>
+      
+    
+  </ul>
+</nav>
+
+    <!-- Main -->
+    <div id="main">
+      <div class="inner">
+        <div class="post-pagetitle">
+          <h1>
+            3.2 Activity的基本用法
+          </h1>
+        </div>
+        <div class="post-info">
+          <time class="post-time">
+            2024-01-29
+          </time>
+          <span class="read-times">
+            7 min read
+          </span>
+          
+          <a href="https://Rson9.github.io/tag/android-study/" class="post-tags">
+            # Android Study
+          </a>
+          
+        </div>
+        
+        <div class="post-content-wrapper">
+          <div class="post-content">
+            <h1 id="1主activity的创建">1.主Activity的创建</h1>
+<p>在主目录的src中创建一个kt文件，命名为 <strong>MainActivity</strong> ,继承于 <strong>AppCompatActivity</strong> 类，重写 <strong>onCreate()</strong> 方法。</p>
+<pre><code class="language-kotlin">class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+}
+</code></pre>
+<h1 id="2-布局的创建和加载">2. 布局的创建和加载</h1>
+<p>由于Android程序的逻辑视图分离，因此需要设计布局文件，在res目录下的layout创建一个activity-main.xml</p>
+<ul>
+<li>match_parent(fill_parent)表示让当前控件的大小和父布局的大小一样，也就是由父布局来决定当前控件的大小</li>
+<li>wrap_content表示让当前的控件大小能够刚好包含里面的内容，也就是由控件内容决定当前控件的大小</li>
+<li>orientation用于指定布局内控件排列方式，&quot;vertical&quot;为垂直排列，&quot;horizontal&quot;为水平排列</li>
+</ul>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:orientation=&quot;vertical&quot;&gt;
+&lt;/LinearLayout&gt;
+</code></pre>
+<h1 id="3-button元素的添加">3. Button元素的添加</h1>
+<ul>
+<li>&quot;@+id/button1&quot;: 设置当前元素id为button1</li>
+<li>android:text:设置Button元素显示的文本内容</li>
+</ul>
+<pre><code class="language-xml">    &lt;Button
+        android:id=&quot;@+id/button1&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:text=&quot;Button 1&quot; /&gt;
+</code></pre>
+<p>现在需要在Activity中加载这个布局文件从而显示这个button,在onCreate中添加<code>setContentView(R.layout.activity_main)</code>来启用布局<br>
+最后需要在AndroidMainfest.xml文件中注册Activity，因为当前创建的Activity是属于主Activity，因此在启动文件中添加如下代码</p>
+<ul>
+<li>android:allowBackup用于设置是否允许备份，默认被设置为允许，但是这是不安全的</li>
+<li>android:dataExtractionRules和 android:fullBackupContent应该是和备份相关的，暂时不做了解</li>
+<li>icon设置app图标，label设置app名称，roundIcon这是一个只适用在Android 7.1系统上的过渡版本</li>
+<li>supportsRtl设置是否支持从右到左的布局</li>
+<li>theme设置app主题</li>
+<li>tools:targetApi用于指定app针对的Android API级别，&quot;31&quot;表示针对Android 12设计</li>
+<li>由于当前的Activity是主Activity，因此需要设置  <code>intent-filter</code> 属性，在&lt;activity&gt;标签中,通过android:name指定注册的Activity，<strong>.MainActivity</strong> 是    <strong>com.example.myapplication.MainActivity</strong> 的缩写</li>
+<li>exported用来标示当前组件是否支持其它应用调用或者使用，只有主Activity需要设置这个属性</li>
+</ul>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;&gt;
+
+    &lt;application
+        android:allowBackup=&quot;false&quot;
+        android:dataExtractionRules=&quot;@xml/data_extraction_rules&quot;
+        android:fullBackupContent=&quot;@xml/backup_rules&quot;
+        android:icon=&quot;@mipmap/ic_launcher&quot;
+        android:label=&quot;@string/app_name&quot;
+        android:roundIcon=&quot;@mipmap/ic_launcher_round&quot;
+        android:supportsRtl=&quot;true&quot;
+        android:theme=&quot;@style/Theme.MyApplication&quot;
+        tools:targetApi=&quot;31&quot;&gt;
+        &lt;activity
+            android:name=&quot;.MainActivity&quot;
+            android:exported=&quot;true&quot;&gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;
+
+                &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/activity&gt;
+    &lt;/application&gt;
+
+&lt;/manifest&gt;
+</code></pre>
+<h1 id="4-在activity中使用toast">4. 在Activity中使用Toast</h1>
+<h2 id="1-什么是toast">1. 什么是Toast？</h2>
+<p>Toast是Android系统提供的一种提醒方式，在程序中可以使用它将一些短小的信息通知给用户，这些信息在一段时间后自动消失。</p>
+<h2 id="2-如何使用toast">2. 如何使用Toast？</h2>
+<p>首先定义一个弹出Toast的触发点，暂时设置在已经创建的button元素上。在 <strong>OnCreate()</strong> 方法中添加如下代码：</p>
+<ul>
+<li><strong>findViewById()</strong> 方法用于在布局文件中获取定义的元素，该方法返回的是一个继承于<strong>View</strong> 的泛型对象，因此需要指定泛型</li>
+<li><strong>setOnClickListener{}</strong> 用于给button注册监听器，点击时执行监听器中的 <strong>onClick()</strong> 方法(由于只有一个方法，可以省略)</li>
+<li>通过静态方法 <strong>makeText</strong> 创建一个 <strong>Toast</strong> 对象，然后调用 <strong>show()</strong> 方法显示。 <strong>makeText()</strong> 需要传入3个参数，第一个参数是 <strong>Context</strong>（上下文），由于Activity本身就是一个 <strong>Context</strong> 对象，可以直接传入 <strong>this</strong> ；第二个参数是Toast显示的文本内容；第三个参数是Toast显示的时长，有两个内置常量可以选择：<strong>Toast.LENGTH_SHORT</strong> 和 <strong>TOAST.LENGTH_LONG</strong><pre><code class="language-kotlin">val button1 = findViewById&lt;Button&gt;(R.id.button1)
+     button1.setOnClickListener{
+         Toast.makeText(this, &quot;You clicked Button1&quot;, Toast.LENGTH_SHORT).show()
+        // finish()  -用于销毁当前Activity
+     }
+</code></pre>
+</li>
+</ul>
+<h1 id="5在activity中使用menu">5.在Activity中使用Menu</h1>
+<p>首先在res目录下创建一个menu文件夹，然后创建一个名为&quot;main&quot;的菜单文件</p>
+<h2 id="1-新建menu资源文件">1. 新建Menu资源文件</h2>
+<p>在创建的main.xml菜单文件中添加如下代码：</p>
+<ul>
+<li>设置了两个菜单项，分别为add_item和remove_item</li>
+<li>&quot;@string/...&quot;是一种命名规范，通过在res下的values子目录中的strings.xml中添加文本内容</li>
+</ul>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;menu xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+    &lt;item
+    android:id=&quot;@+id/add_item&quot;
+    android:title=&quot;@string/add&quot;
+        /&gt;
+    &lt;item
+        android:id=&quot;@+id/remove_item&quot;
+        android:title=&quot;@string/remove&quot;
+        /&gt;
+&lt;/menu&gt;
+</code></pre>
+<p>当前的strings.xml内容:</p>
+<pre><code class="language-xml">&lt;resources&gt;
+    &lt;string name=&quot;app_name&quot;&gt;This is MainActivity&lt;/string&gt;
+    &lt;string name=&quot;add&quot;&gt;Add&lt;/string&gt;
+    &lt;string name=&quot;remove&quot;&gt;Remove&lt;/string&gt;
+&lt;/resources&gt;
+</code></pre>
+<h2 id="2-oncreateoptionsmenu-方法的重写">2.  <strong>onCreateOptionsMenu()</strong> 方法的重写</h2>
+<p>重写该方法实现Activity显示菜单</p>
+<ul>
+<li>menuInflater其实是调用了父类的 <strong>getMenuInflater()</strong> 方法得到了一个<strong>MenuInflater</strong> 对象，再调用它的 <strong>inflate()</strong> 方法，就可以给当前Activity创建菜单了</li>
+<li><strong>inflate()</strong> 方法接收两个参数：第一个参数用于指定通过哪一个资源文件来创建菜单，这里显然是 <strong>R.menu.main</strong> ；第二个参数用于指定菜单项将被添加到哪一个 <strong>Menu</strong> 对象中,这里指定为传入到方法中的menu对象。最后的返回值为 <strong>true</strong> 表示菜单显示。</li>
+<li>在Api34的情况下，默认使用的主题会屏蔽标题栏，需要把themes.xml中<code>&quot;Theme.Materia13.DayNight.NoActionBar&quot;</code>里面的<code>NoActionBar</code>去掉</li>
+</ul>
+<pre><code class="language-kotlin">override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main,menu)
+        return true
+}
+</code></pre>
+<h2 id="3-onoptionsitemselected-方法的重写">3. <strong>onOptionsItemSelected()</strong> 方法的重写</h2>
+<p>重写该方法实现对点击菜单项的处理</p>
+<pre><code class="language-kotlin">override fun onOptionsItemSelected(item: MenuItem): Boolean {
+when(item.itemId) {
+        R.id.add_item -&gt; Toast.makeText(this,&quot;You clicked Add&quot;,
+                                                 Toast.LENGTH_SHORT).show()
+        R.id.remove_item -&gt; Toast.makeText(this, &quot;You clicked Remove&quot;,
+                                                    Toast.LENGTH_SHORT).show()
+}
+    return true
+}
+</code></pre>
+
+          </div>
+          <div class="toc-container">
+            <ul class="markdownIt-TOC">
+<li><a href="#1%E4%B8%BBactivity%E7%9A%84%E5%88%9B%E5%BB%BA">1.主Activity的创建</a></li>
+<li><a href="#2-%E5%B8%83%E5%B1%80%E7%9A%84%E5%88%9B%E5%BB%BA%E5%92%8C%E5%8A%A0%E8%BD%BD">2. 布局的创建和加载</a></li>
+<li><a href="#3-button%E5%85%83%E7%B4%A0%E7%9A%84%E6%B7%BB%E5%8A%A0">3. Button元素的添加</a></li>
+<li><a href="#4-%E5%9C%A8activity%E4%B8%AD%E4%BD%BF%E7%94%A8toast">4. 在Activity中使用Toast</a>
+<ul>
+<li><a href="#1-%E4%BB%80%E4%B9%88%E6%98%AFtoast">1. 什么是Toast？</a></li>
+<li><a href="#2-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8toast">2. 如何使用Toast？</a></li>
+</ul>
+</li>
+<li><a href="#5%E5%9C%A8activity%E4%B8%AD%E4%BD%BF%E7%94%A8menu">5.在Activity中使用Menu</a>
+<ul>
+<li><a href="#1-%E6%96%B0%E5%BB%BAmenu%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6">1. 新建Menu资源文件</a></li>
+<li><a href="#2-oncreateoptionsmenu-%E6%96%B9%E6%B3%95%E7%9A%84%E9%87%8D%E5%86%99">2.  <strong>onCreateOptionsMenu()</strong> 方法的重写</a></li>
+<li><a href="#3-onoptionsitemselected-%E6%96%B9%E6%B3%95%E7%9A%84%E9%87%8D%E5%86%99">3. <strong>onOptionsItemSelected()</strong> 方法的重写</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+
+        <div class="page-count">
+          
+
+          
+        </div>
+      </div>
+
+      <div class="post-pagination inner">
+        
+        <div class="next-post">
+          <div>
+            <a href="https://Rson9.github.io/post/dui-pai-xu/">下一篇</a>
+          </div>
+        </div>
+        
+        
+        <div class="prev-post">
+          <div>
+            <a href="https://Rson9.github.io/post/33-intent-zai-activity-zhong-de-ying-yong/">上一篇</a>
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+
+    <!-- back to top -->
+    <button oneclik="topFunction()" id="BackToTop">
+      TOP
+    </button>
+
+    <div class="post-comment inner">
+      <div class="post-comment">
+        
+
+
+
+
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer id="footer">
+  <div class="inner">
+    <section>
+      <h2>Follow</h2>
+      <ul class="icons">
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </section>
+    <ul class="copyright">
+      <li>
+        <a href="https://Rson9.github.io/atom.xml" target="_blank">
+          RSS
+        </a> 
+      </li>
+      <li><a href="https://github.com/wherelse/gridea-theme-phantom">Theme Phantom</a></li>
+      <li>Welcome to My Blog</li>
+      
+    </ul>
+  </div>
+</footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://Rson9.github.io/media/scripts/jquery.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/browser.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/breakpoints.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/util.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/main.js"></script>
+  
+  <script src="https://Rson9.github.io/media/scripts/prism.js"></script>
+  <script>
+    Prism.highlightAll();
+  </script>
+  
+  <script>
+    post_scroll();
+    back_to_top();
+  </script>
+</body>
+
+</html>

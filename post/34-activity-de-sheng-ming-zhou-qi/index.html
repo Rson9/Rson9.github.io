@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="description" content="秋风清，秋月明。" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>3.4 Activity的生命周期 | Weak</title>
+<link rel="shortcut icon" href="https://Rson9.github.io/favicon.ico?v=1745244200358">
+<link rel="stylesheet" href="https://Rson9.github.io/styles/main.css">
+
+
+  <link rel="canonical" href="https://Rson9.github.io/post/34-activity-de-sheng-ming-zhou-qi/" />
+  <meta name="socialText" content="" />
+  <meta name="description" content="首先，我们要知道“生命周期”是一个什么概念。“生命周期”通常指一个“事件”从被构建到被销毁的整个过程。
+Android中Activity的生命周期总共分为七个阶段：创建，开始，恢复，暂停，停止，重新开始，销毁。
+1. 返回栈
+在Androi..." />
+  <meta name="referrer" content="always" />
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/katex.min.css">
+  <script defer src="https://Rson9.github.io/media/scripts/katex.min.js"></script>
+  
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/prism.css">
+  
+    
+  
+</head>
+
+<body class="is-preload">
+  <!-- Wrapper -->
+  <div id="wrapper">
+
+    <!-- Header -->
+<header id="header">
+  <div class="inner">
+    <!-- Logo -->
+    <a href="https://Rson9.github.io" class="logo">
+      <span class="symbol"
+        ><img
+          src="https://Rson9.github.io/images/avatar.png?v=1745244200358"
+          alt=""
+        />
+      </span>
+      <div class="site-title"> Weak </div>
+    </a>
+
+    <!-- Nav -->
+    <nav>
+      <ul>
+        <li><a href="#menu">Menu</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Menu -->
+<nav id="menu">
+  <ul>
+    
+    
+      <li><a href="/" class="menu">
+        首页
+      </a></li>
+      
+    
+    
+      <li><a href="/archives" class="menu">
+        归档
+      </a></li>
+      
+    
+    
+      <li><a href="/tags" class="menu">
+        标签
+      </a></li>
+      
+    
+    
+      <li><a href="/post/about" class="menu">
+        关于
+      </a></li>
+      
+    
+  </ul>
+</nav>
+
+    <!-- Main -->
+    <div id="main">
+      <div class="inner">
+        <div class="post-pagetitle">
+          <h1>
+            3.4 Activity的生命周期
+          </h1>
+        </div>
+        <div class="post-info">
+          <time class="post-time">
+            2024-03-01
+          </time>
+          <span class="read-times">
+            5 min read
+          </span>
+          
+          <a href="https://Rson9.github.io/tag/android-study/" class="post-tags">
+            # Android Study
+          </a>
+          
+        </div>
+        
+        <div class="post-content-wrapper">
+          <div class="post-content">
+            <p>首先，我们要知道“生命周期”是一个什么概念。“生命周期”通常指一个“事件”从被构建到被销毁的整个过程。</p>
+<p>Android中<strong>Activity的生命周期</strong>总共分为七个阶段：创建，开始，恢复，暂停，停止，重新开始，销毁。</p>
+<h1 id="1-返回栈">1. 返回栈</h1>
+<p>在Android中，Activity是可以层叠的。我们每启动一个新的Activity，就会覆盖在原Activity上面，然后点击Back键会销毁最上面的Activity，下面的Activity就会重新显示出来。</p>
+<p>这个过程和数据结构中的“栈”是相同的方式。在Android中，其实是使用任务（task）来管理Activity的，一个任务就是一组存放在栈里的Activity的集合，这个栈被称之为 <strong>“返回栈”（task stack）</strong> 。</p>
+<h1 id="2-activity状态">2. Activity状态</h1>
+<p>每个Activity在其生命周期中最多可能会有4种状态。</p>
+<ol>
+<li><strong>运行状态</strong></li>
+</ol>
+<p>当一个Activity位于返回栈的栈顶时，Activity就处于运行状态。系统回收处于运行状态的Activity，会带来非常差的用户体验，包括当前状态未被保存等用户不愿看到的结果。</p>
+<ol start="2">
+<li><strong>暂停状态</strong></li>
+</ol>
+<p>当一个Activity不再处于栈顶位置，但仍然可见时，Activity就进入了暂停状态。需要注意的是，不在栈顶的Activity也可能是可见，因为Activity也可以是不占满屏幕的，比如对话框形式的Activity只会占用屏幕中间的部分区域。处于暂停状态的Activity仍然是完全存活的，系统也不愿回收这种Activity（因为它是可见的，回收可见的东西都会给用户带来不好的体验），只有在内存极低的情况下，系统才会去考虑回收这种Activity。</p>
+<ol start="3">
+<li><strong>停止状态</strong></li>
+</ol>
+<p>当一个Activity不再处于栈顶位置，并且完全不可见时，就进入了停止状态。系统仍然会为这种Activity保存相应的状态和成员变量，但这并不是完全可靠的，当其他地方需要内存时，处于停止状态的Activity有可能被系统回收。</p>
+<ol start="4">
+<li><strong>销毁状态</strong></li>
+</ol>
+<p>一个Activity从返回栈中移除后就会变成销毁状态。系统最倾向于回收处于这种状态的Activity，从而保证手机内存充足。</p>
+<h1 id="3-activity的生存期">3. Activity的生存期</h1>
+<p>Activity类中定义了7个回调方法，覆盖了Activity生命周期的每一个环节。</p>
+<ul>
+<li>
+<p><strong>onCreate()</strong>：这个方法见到过很多次，它会在Activity第一次被创建时调用。在这个方法中需要完成对Activity的初始化操作，比如加载布局、绑定事件等。</p>
+</li>
+<li>
+<p><strong>onStart()</strong>：这个方法在Activity由不可见变为可见的时候调用。</p>
+</li>
+<li>
+<p><strong>onResume()</strong>：这个方法在Activity准备好和用户进行交互时调用。此时的Activity一定处于返回栈的栈顶，并且处于运行状态。</p>
+</li>
+<li>
+<p><strong>onPause()</strong>：这个方法在系统准备去启动或者恢复另一个Activity的时候调用。我们通常会在这个方法中将一些消耗CPU的资源释放掉，以及保存一些关键数据，但这个方法的执行速度一定要快，不然会影响到新的栈顶Activity的使用。</p>
+</li>
+<li>
+<p><strong>onStop()</strong>：这个方法在Activity完全不可见时调用。它和 <strong>onPause()</strong> 方法的主要区别在于，如果启动的新Activity是一个对话框式的Activity，那么 <strong>onPause()</strong> 方法会得到执行，而 <strong>onStop()</strong> 不会。</p>
+</li>
+<li>
+<p><strong>onDestroy()</strong>：这个方法在Activity被销毁前调用，之后Activity的状态将变成销毁状态。</p>
+</li>
+<li>
+<p><strong>onRestart()</strong>：这个方法在Activity由停止状态变为运行状态之前调用，也就是Activity被重新启动。</p>
+</li>
+</ul>
+<p>以上7个方法中除了<strong>onRestart()</strong> 方法，其他都是两两相对的，从而又可以将Activity分为下面三种生存期。</p>
+<ul>
+<li><strong>完整生存期</strong>。Activity在<strong>onCreate()</strong> 方法和<strong>onDestory()</strong> 方法之间所经历的就是完整生存期。一般情况下，一个Activity会在<strong>onCreate()</strong> 方法中完成各种初始化操作，在<strong>onDestory()</strong> 方法中完成释放内存的操作。</li>
+<li><strong>可见生存期</strong>。Activity在<strong>onStart()</strong> 方法和<strong>onStop()</strong> 方法之间所经历的就是可见生存期。在可见生存期内，Activity对用户总是可见的，即使可能无法和用户交互。我们可以通过这两个方法合理的管理那些对用户可见的资源。比如在<strong>onStart()</strong> 方法中对资源进行加载，而在<strong>onStop()</strong> 方法中对资源进行释放，从而保证处于停止状态的Activity不会占用太多内存。</li>
+<li><strong>前台生存期</strong>。Activity在<strong>onResume()</strong> 和<strong>onPause()</strong> 方法之间所经历的就是前台生存期。在这期间，Activity总是处于运行状态，此时的Activity是可以和用户进行交互的。</li>
+</ul>
+
+          </div>
+          <div class="toc-container">
+            <ul class="markdownIt-TOC">
+<li><a href="#1-%E8%BF%94%E5%9B%9E%E6%A0%88">1. 返回栈</a></li>
+<li><a href="#2-activity%E7%8A%B6%E6%80%81">2. Activity状态</a></li>
+<li><a href="#3-activity%E7%9A%84%E7%94%9F%E5%AD%98%E6%9C%9F">3. Activity的生存期</a></li>
+</ul>
+
+          </div>
+        </div>
+
+        <div class="page-count">
+          
+
+          
+        </div>
+      </div>
+
+      <div class="post-pagination inner">
+        
+        <div class="next-post">
+          <div>
+            <a href="https://Rson9.github.io/post/33-intent-zai-activity-zhong-de-ying-yong/">下一篇</a>
+          </div>
+        </div>
+        
+        
+        <div class="prev-post">
+          <div>
+            <a href="https://Rson9.github.io/post/cde-lian-biao-shi-xian/">上一篇</a>
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+
+    <!-- back to top -->
+    <button oneclik="topFunction()" id="BackToTop">
+      TOP
+    </button>
+
+    <div class="post-comment inner">
+      <div class="post-comment">
+        
+
+
+
+
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer id="footer">
+  <div class="inner">
+    <section>
+      <h2>Follow</h2>
+      <ul class="icons">
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </section>
+    <ul class="copyright">
+      <li>
+        <a href="https://Rson9.github.io/atom.xml" target="_blank">
+          RSS
+        </a> 
+      </li>
+      <li><a href="https://github.com/wherelse/gridea-theme-phantom">Theme Phantom</a></li>
+      <li>Welcome to My Blog</li>
+      
+    </ul>
+  </div>
+</footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://Rson9.github.io/media/scripts/jquery.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/browser.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/breakpoints.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/util.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/main.js"></script>
+  
+  <script src="https://Rson9.github.io/media/scripts/prism.js"></script>
+  <script>
+    Prism.highlightAll();
+  </script>
+  
+  <script>
+    post_scroll();
+    back_to_top();
+  </script>
+</body>
+
+</html>

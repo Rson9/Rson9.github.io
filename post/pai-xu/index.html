@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="description" content="秋风清，秋月明。" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>排序 | Weak</title>
+<link rel="shortcut icon" href="https://Rson9.github.io/favicon.ico?v=1745244200358">
+<link rel="stylesheet" href="https://Rson9.github.io/styles/main.css">
+
+
+  <link rel="canonical" href="https://Rson9.github.io/post/pai-xu/" />
+  <meta name="socialText" content="" />
+  <meta name="description" content="冒泡排序
+func bubbleSort(arr []int) []int {
+	for i := 0; i &amp;lt; len(arr)-1; i++ {
+		count := false
+		for j := 1; j &amp;lt; len(..." />
+  <meta name="referrer" content="always" />
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/katex.min.css">
+  <script defer src="https://Rson9.github.io/media/scripts/katex.min.js"></script>
+  
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/prism.css">
+  
+    
+  
+</head>
+
+<body class="is-preload">
+  <!-- Wrapper -->
+  <div id="wrapper">
+
+    <!-- Header -->
+<header id="header">
+  <div class="inner">
+    <!-- Logo -->
+    <a href="https://Rson9.github.io" class="logo">
+      <span class="symbol"
+        ><img
+          src="https://Rson9.github.io/images/avatar.png?v=1745244200358"
+          alt=""
+        />
+      </span>
+      <div class="site-title"> Weak </div>
+    </a>
+
+    <!-- Nav -->
+    <nav>
+      <ul>
+        <li><a href="#menu">Menu</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Menu -->
+<nav id="menu">
+  <ul>
+    
+    
+      <li><a href="/" class="menu">
+        首页
+      </a></li>
+      
+    
+    
+      <li><a href="/archives" class="menu">
+        归档
+      </a></li>
+      
+    
+    
+      <li><a href="/tags" class="menu">
+        标签
+      </a></li>
+      
+    
+    
+      <li><a href="/post/about" class="menu">
+        关于
+      </a></li>
+      
+    
+  </ul>
+</nav>
+
+    <!-- Main -->
+    <div id="main">
+      <div class="inner">
+        <div class="post-pagetitle">
+          <h1>
+            排序
+          </h1>
+        </div>
+        <div class="post-info">
+          <time class="post-time">
+            2024-12-21
+          </time>
+          <span class="read-times">
+            3 min read
+          </span>
+          
+        </div>
+        
+        <div class="post-content-wrapper">
+          <div class="post-content">
+            <h1 id="冒泡排序">冒泡排序</h1>
+<pre><code class="language-go">func bubbleSort(arr []int) []int {
+	for i := 0; i &lt; len(arr)-1; i++ {
+		count := false
+		for j := 1; j &lt; len(arr)-i; j++ {
+			if arr[j] &lt; arr[j-1] {
+				arr[j], arr[j-1] = arr[j-1], arr[j]
+				count = true
+			}
+		}
+		if !count {
+			break
+		}
+	}
+	return arr
+}
+</code></pre>
+<h1 id="选择排序">选择排序</h1>
+<pre><code class="language-go">func selectionSort(arr []int) []int {
+	for i := 0; i &lt; len(arr)-1; i++ {
+		minIdx := i
+		for j := i + 1; j &lt; len(arr); j++ {
+			if arr[j] &lt; arr[minIdx] {
+				minIdx = j
+			}
+		}
+		arr[i], arr[minIdx] = arr[minIdx], arr[i]
+	}
+	return arr
+}
+</code></pre>
+<h1 id="插入排序">插入排序</h1>
+<pre><code class="language-go">func insertSort(arr []int) []int {
+	for i := 1; i &lt; len(arr); i++ {
+		base := arr[i]
+		j := i - 1
+		for ; j &gt;= 0 &amp;&amp; arr[j] &gt; base; j-- {
+			arr[j+1] = arr[j]
+		}
+		arr[j+1] = base
+	}
+	return arr
+}
+</code></pre>
+<h1 id="快速排序">快速排序</h1>
+<pre><code class="language-go">func quickSort(arr []int, left int, right int) {
+	for left &lt; right {
+		pivot := partition(arr, left, right)
+		if pivot-left &lt; right-pivot {
+			quickSort(arr, left, pivot-1)
+			left = pivot + 1
+		} else {
+			quickSort(arr, pivot+1, right)
+			right = pivot - 1
+		}
+	}
+}
+
+// 哨兵划分
+func partition(arr []int, left int, right int) int {
+	i := left
+	j := right
+	for i &lt; j {
+		for ; i &lt; j &amp;&amp; arr[j] &gt;= arr[left]; j-- {
+		}
+		for ; i &lt; j &amp;&amp; arr[i] &lt;= arr[left]; i++ {
+		}
+		arr[i], arr[j] = arr[j], arr[i]
+	}
+	arr[left], arr[i] = arr[i], arr[left]
+	return i
+}
+</code></pre>
+<h1 id="归并排序">归并排序</h1>
+<pre><code class="language-go">// 5.归并排序
+func mergeSort(arr []int) []int {
+	length := len(arr)
+	if length &lt; 2 {
+		return arr
+	}
+	mid := length / 2
+	left := arr[:mid]
+	right := arr[mid:]
+	return merge(mergeSort(left), mergeSort(right))
+}
+
+// 排序合并
+func merge(left []int, right []int) []int {
+	var tmp []int
+	for len(left) != 0 &amp;&amp; len(right) != 0 {
+		if left[0] &lt;= right[0] {
+			tmp = append(tmp, left[0])
+			left = left[1:]
+		} else {
+			tmp = append(tmp, right[0])
+			right = right[1:]
+		}
+	}
+	for len(left) != 0 {
+		tmp = append(tmp, left[0])
+		left = left[1:]
+	}
+	for len(right) != 0 {
+		tmp = append(tmp, right[0])
+		right = right[1:]
+	}
+	return tmp
+}
+</code></pre>
+<h1 id="堆排序">堆排序</h1>
+<pre><code class="language-go">// 6.堆排序
+func heapSort(arr []int) {
+	maxHeap(arr)
+	for len(arr) &gt; 1 {
+		arr[0], arr[len(arr)-1] = arr[len(arr)-1], arr[0]
+		arr = arr[:len(arr)-1]
+		deepHeap(arr, 0)
+	}
+}
+
+// 维护最大堆
+func deepHeap(arr []int, index int) {
+	left := index*2 + 1
+	right := index*2 + 2
+	largest := index
+	for left &lt; len(arr) &amp;&amp; arr[left] &gt; arr[largest] {
+		largest = left
+	}
+	for right &lt; len(arr) &amp;&amp; arr[right] &gt; arr[largest] {
+		largest = right
+	}
+	if largest != index {
+		arr[largest], arr[index] = arr[index], arr[largest]
+		deepHeap(arr, largest)
+	}
+
+}
+
+// 最大堆
+func maxHeap(arr []int) {
+	for i := (len(arr) - 1) / 2; i &gt;= 0; i-- {
+		deepHeap(arr, i)
+	}
+}
+</code></pre>
+
+          </div>
+          <div class="toc-container">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F">冒泡排序</a></li>
+<li><a href="#%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F">选择排序</a></li>
+<li><a href="#%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F">插入排序</a></li>
+<li><a href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F">快速排序</a></li>
+<li><a href="#%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F">归并排序</a></li>
+<li><a href="#%E5%A0%86%E6%8E%92%E5%BA%8F">堆排序</a></li>
+</ul>
+
+          </div>
+        </div>
+
+        <div class="page-count">
+          
+
+          
+        </div>
+      </div>
+
+      <div class="post-pagination inner">
+        
+        <div class="next-post">
+          <div>
+            <a href="https://Rson9.github.io/post/er-cha-shu-de-bian-li/">下一篇</a>
+          </div>
+        </div>
+        
+        
+        <div class="prev-post">
+          <div>
+            <a href="https://Rson9.github.io/post/fmt/">上一篇</a>
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+
+    <!-- back to top -->
+    <button oneclik="topFunction()" id="BackToTop">
+      TOP
+    </button>
+
+    <div class="post-comment inner">
+      <div class="post-comment">
+        
+
+
+
+
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer id="footer">
+  <div class="inner">
+    <section>
+      <h2>Follow</h2>
+      <ul class="icons">
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </section>
+    <ul class="copyright">
+      <li>
+        <a href="https://Rson9.github.io/atom.xml" target="_blank">
+          RSS
+        </a> 
+      </li>
+      <li><a href="https://github.com/wherelse/gridea-theme-phantom">Theme Phantom</a></li>
+      <li>Welcome to My Blog</li>
+      
+    </ul>
+  </div>
+</footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://Rson9.github.io/media/scripts/jquery.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/browser.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/breakpoints.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/util.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/main.js"></script>
+  
+  <script src="https://Rson9.github.io/media/scripts/prism.js"></script>
+  <script>
+    Prism.highlightAll();
+  </script>
+  
+  <script>
+    post_scroll();
+    back_to_top();
+  </script>
+</body>
+
+</html>

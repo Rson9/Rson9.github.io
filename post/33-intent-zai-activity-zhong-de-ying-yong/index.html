@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="description" content="秋风清，秋月明。" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>3.3 Intent在Activity中的应用 | Weak</title>
+<link rel="shortcut icon" href="https://Rson9.github.io/favicon.ico?v=1745244200358">
+<link rel="stylesheet" href="https://Rson9.github.io/styles/main.css">
+
+
+  <link rel="canonical" href="https://Rson9.github.io/post/33-intent-zai-activity-zhong-de-ying-yong/" />
+  <meta name="socialText" content="" />
+  <meta name="description" content="我们怎么实现在启动主Activity后，实现Activity的跳转。Intent的相关用法会帮我们解决这个问题。
+1. 什么是Intent？
+Intent是一种信息传递机制，用于在不同组件之间传递信息。类似于一个“信使”，负责携带你的请求从..." />
+  <meta name="referrer" content="always" />
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/katex.min.css">
+  <script defer src="https://Rson9.github.io/media/scripts/katex.min.js"></script>
+  
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/prism.css">
+  
+    
+  
+</head>
+
+<body class="is-preload">
+  <!-- Wrapper -->
+  <div id="wrapper">
+
+    <!-- Header -->
+<header id="header">
+  <div class="inner">
+    <!-- Logo -->
+    <a href="https://Rson9.github.io" class="logo">
+      <span class="symbol"
+        ><img
+          src="https://Rson9.github.io/images/avatar.png?v=1745244200358"
+          alt=""
+        />
+      </span>
+      <div class="site-title"> Weak </div>
+    </a>
+
+    <!-- Nav -->
+    <nav>
+      <ul>
+        <li><a href="#menu">Menu</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Menu -->
+<nav id="menu">
+  <ul>
+    
+    
+      <li><a href="/" class="menu">
+        首页
+      </a></li>
+      
+    
+    
+      <li><a href="/archives" class="menu">
+        归档
+      </a></li>
+      
+    
+    
+      <li><a href="/tags" class="menu">
+        标签
+      </a></li>
+      
+    
+    
+      <li><a href="/post/about" class="menu">
+        关于
+      </a></li>
+      
+    
+  </ul>
+</nav>
+
+    <!-- Main -->
+    <div id="main">
+      <div class="inner">
+        <div class="post-pagetitle">
+          <h1>
+            3.3 Intent在Activity中的应用
+          </h1>
+        </div>
+        <div class="post-info">
+          <time class="post-time">
+            2024-02-15
+          </time>
+          <span class="read-times">
+            9 min read
+          </span>
+          
+          <a href="https://Rson9.github.io/tag/android-study/" class="post-tags">
+            # Android Study
+          </a>
+          
+        </div>
+        
+        <div class="post-content-wrapper">
+          <div class="post-content">
+            <p>我们怎么实现在启动主Activity后，实现Activity的跳转。Intent的相关用法会帮我们解决这个问题。</p>
+<h1 id="1-什么是intent">1. 什么是Intent？</h1>
+<p>Intent是一种信息传递机制，用于在不同组件之间传递信息。类似于一个“信使”，负责携带你的请求从一个地方送到另一个地方。Intent可以启动活动，服务或者发送广播。<br>
+Intent有两种主要类型：<strong>显式类型</strong> 和 <strong>隐式类型</strong>。</p>
+<h1 id="2使用显式类型">2.使用显式类型</h1>
+<h2 id="21-开始之前">2.1 开始之前</h2>
+<p>首先在src -&gt; main -&gt; java ,下面创建的包内创建一个SecondActivity.kt文件，内容如下:</p>
+<pre><code class="language-kotlin">class SecondActivity : AppCompatActivity() {
+   override fun onCreate(savedInstanceState: Bundle?) {
+       super.onCreate(savedInstanceState)
+       setContentView(R.layout.second_layout)
+   }
+}
+</code></pre>
+<p>然后在AndroidManifest.xml中注册该组件：<code>&lt;activity android:name=&quot;.SecondActivity&quot;/&gt;</code><br>
+最后创建一个second_layout,内容设置为下面的内容:</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:orientation=&quot;vertical&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;&gt;
+&lt;Button
+    android:id=&quot;@+id/button2&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:text=&quot;Button 2&quot;
+    /&gt;
+&lt;/LinearLayout&gt;
+</code></pre>
+<h2 id="22-显式intent的创建">2.2 显式Intent的创建</h2>
+<p>Intent有多个构造函数的重载，其中一个是 <strong>Intent(Context packageContext, Class&lt;?&gt; cls)</strong> 。这个构造函数接收两个参数：第一个参数 <strong>Context</strong> 要求提供一个启动Activity的上下文；第二个参数用于指定想要启动的目标Activity，通过这个构造函数就可以构建出Intent的“意图”。Activity类中提供了一个 <strong>startActivity()</strong> 方法，专门用于启动Activity，它接收一个Intent参数，这里将我们创建的Intent传入 <strong>startActivity()</strong> 方法就可以启动目标Activity了。<br>
+修改MainActivity中按钮的点击事件，代码如下：</p>
+<pre><code class="language-kotlin">button1.setOnClickListener{
+    val intent = Intent(this, SecondActivity::class.java)
+    startActivity(intent)
+}
+</code></pre>
+<p>这里我们创建了一个Intent对象，第一个参数传入this也就是MainActivity作为上下文，第二个参数传入 <strong>SecondActivity::class.java</strong> 作为目标Activity。然后通过 <strong>startActivity()</strong> 方法执行这个Intent就行了。<br>
+跳转之后按一下back键就可以销毁当前Activity了。</p>
+<h1 id="3-使用隐式intent">3. 使用隐式Intent</h1>
+<h2 id="31-基本的使用方式">3.1 基本的使用方式</h2>
+<p>隐式的Intent大概意思就是给你想要跳转的Activity设置一个 <strong>name</strong> 和 <strong>category</strong>，然后交由系统进行分析跳转。<br>
+现在我们先在配置的启动文件中配置 <strong>.SecondActivity</strong>  的相关设置。代码如下：</p>
+<pre><code class="language-xml">&lt;/activity&gt;
+&lt;activity android:name=&quot;.SecondActivity&quot;
+    android:exported=&quot;true&quot;&gt;
+    &lt;intent-filter&gt;
+        &lt;action android:name=&quot;com.example.myapplication.ACTION_START&quot;/&gt;
+        &lt;category android:name=&quot;android.intent.category.DEFAULT&quot;/&gt;
+        &lt;category android:name=&quot;MY_CATEGORY&quot;/&gt;
+    &lt;/intent-filter&gt;
+&lt;/activity&gt;
+</code></pre>
+<p>然后修改MainActivity中按钮的点击事件，代码如下:</p>
+<ul>
+<li>注意标签 <strong>category</strong>可以是多个，可以通过addCategory()方法进行匹配，但是 <strong>action</strong> 标签只能是一个</li>
+<li>如果没有找到匹配的Activity，程序会崩溃，所以我们最好在Activity的配置中添加category的默认值（android.intent.category.DEFAULT）</li>
+</ul>
+<pre><code class="language-kotlin">button1.setOnClickListener{
+    val intent = Intent(&quot;com.example.myapplication.ACTION_START&quot;)
+    intent.addCategory(&quot;MY_CATEGORY&quot;)
+    startActivity(intent)
+}
+</code></pre>
+<h2 id="32-扩展使用">3.2 扩展使用</h2>
+<p>使用隐式Intent不仅可以启动自己程序内的Activity，还可以启动其他程序的Activity，例如你想要在你的应用程序中展现一个网页，我们可使用隐式Intent达到目的。<br>
+修改MainActivity中按钮点击事件，代码如下：</p>
+<ul>
+<li>我们首先指定了Intent的 <strong>action</strong> 是 <strong>Intent.ACTION_VIEW</strong>，这是一个Android系统内置的动作，其常量值是 <strong>android.intent.action.VIEW</strong>。然后通过 <strong>Uri.parse()</strong> 方法将一个网址字符串解析成一个 <strong>Uri</strong> 对象，再调用Intent的 <strong>setData()</strong> 方法将这个 <strong>Uri</strong>对象传递进去。（这里我们使用了kotlin的语法糖，直接用intent.data来操作，看上去不一样，但是操作是一致的）</li>
+<li>传入的网址似乎必须要能被解析，不然程序也会崩溃</li>
+</ul>
+<pre><code class="language-kotlin">button1.setOnClickListener{
+    val intent = Intent(Intent.ACTION_VIEW)
+    intent.data = Uri.parse(&quot;https://www.baidu.com&quot;)
+    startActivity(intent)
+}
+</code></pre>
+<p>上述代码中的 <strong>setData()</strong> 用于接收一个 ** Uri** 对象，用于指定当前Intent正在操作的数据，通常以字符串形式传入 <strong>Uri.parse()</strong> 方法中解析产生。<br>
+同时，我们可以在 <strong><intent-filter></strong> 标签中再配置一个 <strong><data></strong> 标签，用于更加精确地指定当前Activity能够响应的数据。 <strong><data></strong> 标签中主要可以配置以下内容。</p>
+<ul>
+<li><strong>android:scheme</strong> ：用于指定数据协议部分，例如上面的https部分</li>
+<li><strong>android:host</strong> ：用于指定数据的主机名部分，例如上面的www.baidu.com部分</li>
+<li><strong>android:port</strong> ：用于指定数据的端口部分，一般紧随在主机名之后</li>
+<li><strong>android:path</strong> ：用于指定主机名和端口之后的部分，例如一段网址中跟在域名之后的内容</li>
+<li><strong>android:mimeType</strong> ：用于指定可以处理的数据类型，允许使用通配符的方式进行指定<br>
+只有当 <strong><data></strong> 标签中指定的内容和Intent中携带的Data完全一致，当前Activity才能够响应该Intent。但是在 <strong><data></strong> 标签中一般不会指定太多的内容。例如上面的示例中，只需要指定 <strong>&lt;android:scheme&gt;</strong> 为https，就可以响应所有https协议的Intent了。</li>
+<li>在实际情况中，在设置了默认浏览器的情况下，添加了scheme不会响应你自己的Activity。（在我的测试下）</li>
+</ul>
+<h2 id="33-补充使用">3.3 补充使用</h2>
+<h3 id="1-相关协议">1. 相关协议</h3>
+<p>除了 <strong>https</strong> 协议外，还有其他很多协议，比如geo表示显示地理位置、tel表示拨打电话。下面举例拨打电话：</p>
+<ul>
+<li>指定了 <strong>action</strong> 为 <strong>Intent.ACTION_DIAL</strong>，这是一个Android系统的内置动作。</li>
+<li>在 <strong>data</strong> 部分指定了协议为 <strong>tel</strong>，号码是1001011。</li>
+</ul>
+<pre><code class="language-kotlin">button1.setOnClickListener{
+    val intent = Intent(Intent.ACTION_DIAL)
+    intent.data = Uri.parse(&quot;tel:1001011&quot;)
+    startActivity(intent)
+}
+</code></pre>
+<h3 id="2-intent向下传递数据">2. Intent向下传递数据</h3>
+<p>Intent中提供了一系列 <strong>putExtra</strong> 方法的重载，可以把我们想要传递的数据暂存在Intent中，在启动另一个Activity后，只需要把这些数据给取出来就行了。例如，MainActivity中有一个字符串，现在想把这个字符串传递到SecondActivity中，可以这样编写代码：</p>
+<ul>
+<li><strong>putExtra()</strong> 接收两个参数，第一个参数是键，用于之后从Intent中取值，第二个参数是传递的数据。</li>
+</ul>
+<pre><code class="language-kotlin">button1.setOnClickListener{
+    val data = &quot;Hello SecondActivity&quot;
+    val intent = Intent(this,SecondActivity::class.java)
+    intent.putExtra(&quot;extra_data&quot;,data)
+    startActivity(intent)
+}
+</code></pre>
+<p>然后在SecondActivity中使用这个暂存的字符串数据：</p>
+<ul>
+<li>这里的intent实际上是调用父类的 <strong>getIntent()</strong> 方法，获取启动当前Activity的Intent，然后调用 <strong>getStringExtra()</strong> 传入相应的键值，从而得到传递的数据。这里传入的是字符串，所以使用 <strong>getStringExtra()</strong> ，如果是其他类型，假如是整型就用 <strong>getIntExtra()</strong> ，其他类型以此类推。</li>
+</ul>
+<pre><code class="language-kotlin">val extraData = intent.getStringExtra(&quot;extra_data&quot;)
+Log.d(&quot;SecondActivity&quot;,&quot;extraData is $extraData&quot;)
+</code></pre>
+<h3 id="3-intent向上返回数据">3. Intent向上返回数据</h3>
+<blockquote>
+<p>下面提供的方法在最近已经被废弃了，google官方不再推荐使用，最新的方法暂时不学习。</p>
+</blockquote>
+<p>Activity类中有一个用于启动Activity的 <strong>startActivityForResult()</strong> 方法，作用是在销毁一个Activity能够返回一个结果给上一个Activity。<br>
+<strong>startActivityForResult()</strong> 接收两个参数：第一个参数是Intent；第二个参数是请求码，用于在之后的回调中判断数据的来源。下面举例说明一下，代码如下：</p>
+<pre><code class="language-kotlin">## MainActivity.kt
+  button1.setOnClickListener{
+            val intent = Intent(this,SecondActivity::class.java)
+            startActivityForResult(intent,1)
+        }
+        //根据返回的请求码进行操作
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            1 -&gt; if (resultCode == RESULT_OK){
+                val returnedData = data?.getStringExtra(&quot;data_return&quot;)
+                Log.d(&quot;MainActivity&quot;,&quot;returned data is $returnedData&quot;)
+            }
+        }
+    }
+## SecondActivity.kt
+  button2.setOnClickListener{
+            val intent = Intent()
+            intent.putExtra(&quot;data_return&quot;,&quot;第二个给第一个返回的数据&quot;)
+            setResult(RESULT_OK, intent)
+            finish()
+        }
+//如果是通过back键进行的销毁，则添加下面的代码
+    override fun onBackPressed(){
+        val intent = Intent()
+        intent.putExtra(&quot;data_return&quot;,&quot;第二个给第一个返回的数据&quot;)
+        setResult(RESULT_OK, intent)
+        finish()
+    }
+</code></pre>
+
+          </div>
+          <div class="toc-container">
+            <ul class="markdownIt-TOC">
+<li><a href="#1-%E4%BB%80%E4%B9%88%E6%98%AFintent">1. 什么是Intent？</a></li>
+<li><a href="#2%E4%BD%BF%E7%94%A8%E6%98%BE%E5%BC%8F%E7%B1%BB%E5%9E%8B">2.使用显式类型</a>
+<ul>
+<li><a href="#21-%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D">2.1 开始之前</a></li>
+<li><a href="#22-%E6%98%BE%E5%BC%8Fintent%E7%9A%84%E5%88%9B%E5%BB%BA">2.2 显式Intent的创建</a></li>
+</ul>
+</li>
+<li><a href="#3-%E4%BD%BF%E7%94%A8%E9%9A%90%E5%BC%8Fintent">3. 使用隐式Intent</a>
+<ul>
+<li><a href="#31-%E5%9F%BA%E6%9C%AC%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F">3.1 基本的使用方式</a></li>
+<li><a href="#32-%E6%89%A9%E5%B1%95%E4%BD%BF%E7%94%A8">3.2 扩展使用</a></li>
+<li><a href="#33-%E8%A1%A5%E5%85%85%E4%BD%BF%E7%94%A8">3.3 补充使用</a>
+<ul>
+<li><a href="#1-%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE">1. 相关协议</a></li>
+<li><a href="#2-intent%E5%90%91%E4%B8%8B%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE">2. Intent向下传递数据</a></li>
+<li><a href="#3-intent%E5%90%91%E4%B8%8A%E8%BF%94%E5%9B%9E%E6%95%B0%E6%8D%AE">3. Intent向上返回数据</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+
+        <div class="page-count">
+          
+
+          
+        </div>
+      </div>
+
+      <div class="post-pagination inner">
+        
+        <div class="next-post">
+          <div>
+            <a href="https://Rson9.github.io/post/activity-de-ji-ben-yong-fa/">下一篇</a>
+          </div>
+        </div>
+        
+        
+        <div class="prev-post">
+          <div>
+            <a href="https://Rson9.github.io/post/34-activity-de-sheng-ming-zhou-qi/">上一篇</a>
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+
+    <!-- back to top -->
+    <button oneclik="topFunction()" id="BackToTop">
+      TOP
+    </button>
+
+    <div class="post-comment inner">
+      <div class="post-comment">
+        
+
+
+
+
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer id="footer">
+  <div class="inner">
+    <section>
+      <h2>Follow</h2>
+      <ul class="icons">
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </section>
+    <ul class="copyright">
+      <li>
+        <a href="https://Rson9.github.io/atom.xml" target="_blank">
+          RSS
+        </a> 
+      </li>
+      <li><a href="https://github.com/wherelse/gridea-theme-phantom">Theme Phantom</a></li>
+      <li>Welcome to My Blog</li>
+      
+    </ul>
+  </div>
+</footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://Rson9.github.io/media/scripts/jquery.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/browser.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/breakpoints.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/util.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/main.js"></script>
+  
+  <script src="https://Rson9.github.io/media/scripts/prism.js"></script>
+  <script>
+    Prism.highlightAll();
+  </script>
+  
+  <script>
+    post_scroll();
+    back_to_top();
+  </script>
+</body>
+
+</html>

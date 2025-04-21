@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="description" content="秋风清，秋月明。" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>4.3 Activity的三种布局方案 | Weak</title>
+<link rel="shortcut icon" href="https://Rson9.github.io/favicon.ico?v=1745244200358">
+<link rel="stylesheet" href="https://Rson9.github.io/styles/main.css">
+
+
+  <link rel="canonical" href="https://Rson9.github.io/post/35-activity-de-san-chong-qi-dong-mo-shi/" />
+  <meta name="socialText" content="" />
+  <meta name="description" content="我们知道Activity的显示是在对应的layout.xml文件中体现的，并且这个界面中会有很多控件，布局就是来控制这些控件位置的方法，下面我会介绍在Activity中的三种布局方案。
+1.LinearLayout布局
+这个布局又被称为线性..." />
+  <meta name="referrer" content="always" />
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/katex.min.css">
+  <script defer src="https://Rson9.github.io/media/scripts/katex.min.js"></script>
+  
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/prism.css">
+  
+    
+  
+</head>
+
+<body class="is-preload">
+  <!-- Wrapper -->
+  <div id="wrapper">
+
+    <!-- Header -->
+<header id="header">
+  <div class="inner">
+    <!-- Logo -->
+    <a href="https://Rson9.github.io" class="logo">
+      <span class="symbol"
+        ><img
+          src="https://Rson9.github.io/images/avatar.png?v=1745244200358"
+          alt=""
+        />
+      </span>
+      <div class="site-title"> Weak </div>
+    </a>
+
+    <!-- Nav -->
+    <nav>
+      <ul>
+        <li><a href="#menu">Menu</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Menu -->
+<nav id="menu">
+  <ul>
+    
+    
+      <li><a href="/" class="menu">
+        首页
+      </a></li>
+      
+    
+    
+      <li><a href="/archives" class="menu">
+        归档
+      </a></li>
+      
+    
+    
+      <li><a href="/tags" class="menu">
+        标签
+      </a></li>
+      
+    
+    
+      <li><a href="/post/about" class="menu">
+        关于
+      </a></li>
+      
+    
+  </ul>
+</nav>
+
+    <!-- Main -->
+    <div id="main">
+      <div class="inner">
+        <div class="post-pagetitle">
+          <h1>
+            4.3 Activity的三种布局方案
+          </h1>
+        </div>
+        <div class="post-info">
+          <time class="post-time">
+            2024-04-24
+          </time>
+          <span class="read-times">
+            5 min read
+          </span>
+          
+          <a href="https://Rson9.github.io/tag/android-study/" class="post-tags">
+            # Android Study
+          </a>
+          
+        </div>
+        
+        <div class="post-content-wrapper">
+          <div class="post-content">
+            <p>我们知道Activity的显示是在对应的layout.xml文件中体现的，并且这个界面中会有很多控件，布局就是来控制这些控件位置的方法，下面我会介绍在Activity中的三种布局方案。</p>
+<h1 id="1linearlayout布局">1.LinearLayout布局</h1>
+<p>这个布局又被称为线性布局，意思就是在线性方向上依次排列，我们可以用 <strong>android:orientation</strong> 这个选项控制线性方向，如果设置为vertical，就是在垂直方向，如果是horizontal，就是在水平方向上了。</p>
+<p>下面举个例子：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+     &lt;!--下面这一个选项后面修改为horizontal，就变成水平方向了--&gt;
+    android:orientation=&quot;vertical&quot;&gt;  
+
+    &lt;Button
+        android:id=&quot;@+id/button1&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:text=&quot;button1&quot; /&gt;
+ 
+
+    &lt;Button
+        android:id=&quot;@+id/button2&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:text=&quot;button2&quot; /&gt;
+
+    &lt;Button
+        android:id=&quot;@+id/button3&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:text=&quot;button3&quot; /&gt;
+&lt;/LinearLayout&gt;
+</code></pre>
+<p>这个布局会在垂直方向上依次排列3个button。按照上面注释中修改，就变成水平方向显示了。</p>
+<p>注意：</p>
+<ul>
+<li>
+<p>如果设置为水平排列，那么控件的宽就不能设置为match_parent，否则一个控件就直接把水平方向占满了。</p>
+</li>
+<li>
+<p>设置为垂直排列，就不能把控件的高设置为match_parent。</p>
+</li>
+</ul>
+<p>下面来看另一个属性 <strong>android:layout_gravity</strong>，这个属性用于指定控件的对齐方式，需要注意的是，如果排列方式是horizontal，那么只有垂直方向的对齐方式才会生效，如果是vertical，就是只有水平方向的生效。因为你设置了排列方向，那这个方向的位置是会随着控件变化而变化的。</p>
+<p>下面我们介绍一下 <strong>android:layout_height</strong> 属性，这个属性指定我们可以通过比例来设置控件大小，就是把所有的weight值加起来，然后通过比例分配位置。</p>
+<p>下面举个例子：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:orientation=&quot;horizontal&quot;&gt;
+
+    &lt;EditText
+        android:layout_width=&quot;0dp&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_weight=&quot;1&quot; /&gt;
+    &lt;Button
+        android:id=&quot;@+id/sent&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:text=&quot;Send&quot; /&gt;
+&lt;/LinearLayout&gt;
+</code></pre>
+<p>这里第二个控件我们没有设置weight值，但是他的width是wrap_content,那么系统会把除了他的位置全部给第一个。</p>
+<h1 id="2relativelayout布局">2.RelativeLayout布局</h1>
+<p>这个布局又叫相对布局，也挺常用的，它通过指定控件和其他控件之间的位置关系来操作，因此布局下来相对随意一些。</p>
+<p>下面举个例子：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;&gt;
+&lt;!-- 这个是相对parent的左上 --&gt;
+    &lt;Button
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:id=&quot;@+id/button1&quot;
+        android:text=&quot;button1&quot;
+        android:layout_alignParentLeft=&quot;true&quot;
+        android:layout_alignParentTop=&quot;true&quot;
+        /&gt;
+    &lt;!-- 这个是相对parent的右上 --&gt;
+    &lt;Button
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:id=&quot;@+id/button2&quot;
+        android:layout_alignParentRight=&quot;true&quot;
+        android:layout_alignParentTop=&quot;true&quot;
+        android:text=&quot;button2&quot;/&gt;
+&lt;!-- 这个是相对parent的中间 --&gt;
+    &lt;Button
+        android:id=&quot;@+id/button3&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_centerInParent=&quot;true&quot;
+        android:text=&quot;button3&quot; /&gt;
+&lt;/RelativeLayout&gt;
+</code></pre>
+<p>上面我们是相对于parent的，也可以相对于控件，这里不介绍了，就是几个属性设置而已。举个例子：android:layout_toRightOf=&quot;@+id/button1&quot;，就是设置在button1的右边。</p>
+<h1 id="3framelayout布局">3.FrameLayout布局</h1>
+<p>这个又叫做帧布局，默认所有控件显示在左上角。要是不指定啥的话，后面添加的控件会覆盖在先创建的上面。</p>
+<p>可以用android:layout_gravity来指定居左居右。用这个布局的地方很少。就不举例子了。</p>
+<h1 id="4补充几个">4.补充几个</h1>
+<h2 id="gridlayout布局">GridLayout布局</h2>
+<p>这个是网格布局，就是把View分成很多个格子，用行列来给控件定位</p>
+<h2 id="tablelayout布局">TableLayout布局</h2>
+<p>TableLayout 是一种可以制作表格的布局，它和 GridLayout 的区别是 GridLayout 只能制定每一列宽度一样的表格布局，而 TableLayout 能够制定各列宽度不一样的表格布局</p>
+
+          </div>
+          <div class="toc-container">
+            <ul class="markdownIt-TOC">
+<li><a href="#1linearlayout%E5%B8%83%E5%B1%80">1.LinearLayout布局</a></li>
+<li><a href="#2relativelayout%E5%B8%83%E5%B1%80">2.RelativeLayout布局</a></li>
+<li><a href="#3framelayout%E5%B8%83%E5%B1%80">3.FrameLayout布局</a></li>
+<li><a href="#4%E8%A1%A5%E5%85%85%E5%87%A0%E4%B8%AA">4.补充几个</a>
+<ul>
+<li><a href="#gridlayout%E5%B8%83%E5%B1%80">GridLayout布局</a></li>
+<li><a href="#tablelayout%E5%B8%83%E5%B1%80">TableLayout布局</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+
+        <div class="page-count">
+          
+
+          
+        </div>
+      </div>
+
+      <div class="post-pagination inner">
+        
+        <div class="next-post">
+          <div>
+            <a href="https://Rson9.github.io/post/cde-lian-biao-shi-xian/">下一篇</a>
+          </div>
+        </div>
+        
+        
+        <div class="prev-post">
+          <div>
+            <a href="https://Rson9.github.io/post/er-cha-shu-de-bian-li/">上一篇</a>
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+
+    <!-- back to top -->
+    <button oneclik="topFunction()" id="BackToTop">
+      TOP
+    </button>
+
+    <div class="post-comment inner">
+      <div class="post-comment">
+        
+
+
+
+
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer id="footer">
+  <div class="inner">
+    <section>
+      <h2>Follow</h2>
+      <ul class="icons">
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </section>
+    <ul class="copyright">
+      <li>
+        <a href="https://Rson9.github.io/atom.xml" target="_blank">
+          RSS
+        </a> 
+      </li>
+      <li><a href="https://github.com/wherelse/gridea-theme-phantom">Theme Phantom</a></li>
+      <li>Welcome to My Blog</li>
+      
+    </ul>
+  </div>
+</footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://Rson9.github.io/media/scripts/jquery.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/browser.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/breakpoints.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/util.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/main.js"></script>
+  
+  <script src="https://Rson9.github.io/media/scripts/prism.js"></script>
+  <script>
+    Prism.highlightAll();
+  </script>
+  
+  <script>
+    post_scroll();
+    back_to_top();
+  </script>
+</body>
+
+</html>

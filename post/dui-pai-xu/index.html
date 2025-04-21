@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="description" content="秋风清，秋月明。" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>堆排序 | Weak</title>
+<link rel="shortcut icon" href="https://Rson9.github.io/favicon.ico?v=1745244200358">
+<link rel="stylesheet" href="https://Rson9.github.io/styles/main.css">
+
+
+  <link rel="canonical" href="https://Rson9.github.io/post/dui-pai-xu/" />
+  <meta name="socialText" content="" />
+  <meta name="description" content="开始之前
+在正式介绍堆排序开始，我们需要先了解下面的几个概念。
+二叉树深度和节点数的关系
+节点数：n
+深度：h
+第i层节点数：2i-1
+前h-1层总和:2h-1-1
+前h层总和：2h-1
+所以层数h和节点数n的关系：h-1 &amp;lt; log..." />
+  <meta name="referrer" content="always" />
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/katex.min.css">
+  <script defer src="https://Rson9.github.io/media/scripts/katex.min.js"></script>
+  
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/prism.css">
+  
+    
+  
+</head>
+
+<body class="is-preload">
+  <!-- Wrapper -->
+  <div id="wrapper">
+
+    <!-- Header -->
+<header id="header">
+  <div class="inner">
+    <!-- Logo -->
+    <a href="https://Rson9.github.io" class="logo">
+      <span class="symbol"
+        ><img
+          src="https://Rson9.github.io/images/avatar.png?v=1745244200358"
+          alt=""
+        />
+      </span>
+      <div class="site-title"> Weak </div>
+    </a>
+
+    <!-- Nav -->
+    <nav>
+      <ul>
+        <li><a href="#menu">Menu</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Menu -->
+<nav id="menu">
+  <ul>
+    
+    
+      <li><a href="/" class="menu">
+        首页
+      </a></li>
+      
+    
+    
+      <li><a href="/archives" class="menu">
+        归档
+      </a></li>
+      
+    
+    
+      <li><a href="/tags" class="menu">
+        标签
+      </a></li>
+      
+    
+    
+      <li><a href="/post/about" class="menu">
+        关于
+      </a></li>
+      
+    
+  </ul>
+</nav>
+
+    <!-- Main -->
+    <div id="main">
+      <div class="inner">
+        <div class="post-pagetitle">
+          <h1>
+            堆排序
+          </h1>
+        </div>
+        <div class="post-info">
+          <time class="post-time">
+            2024-01-19
+          </time>
+          <span class="read-times">
+            4 min read
+          </span>
+          
+          <a href="https://Rson9.github.io/tag/pai-xu/" class="post-tags">
+            # 排序
+          </a>
+          
+        </div>
+        
+        <div class="post-content-wrapper">
+          <div class="post-content">
+            <h1 id="开始之前">开始之前</h1>
+<p>在正式介绍堆排序开始，我们需要先了解下面的几个概念。</p>
+<h2 id="二叉树深度和节点数的关系">二叉树深度和节点数的关系</h2>
+<p>节点数：n</p>
+<p>深度：h</p>
+<p>第i层节点数：2<sup>i-1</sup></p>
+<p>前h-1层总和:2<sup>h-1</sup>-1</p>
+<p>前h层总和：2<sup>h</sup>-1</p>
+<p>所以层数h和节点数n的关系：h-1 &lt; log<sub>2</sub>n+1 &lt; h</p>
+<h2 id="最大堆和最小堆">最大堆和最小堆</h2>
+<h3 id="什么是堆">什么是堆？</h3>
+<ul>
+<li>注：下面使用c++的代码，下标从0开始，则左右节点和父节点（i）的关系：左 2i+1，右 2i+2</li>
+</ul>
+<p>堆是一种特殊的完全二叉树，用于实现优先队列和其他相关的算法。在堆结构中，每个节点遵循特定的规则，这些规则定义了堆的类型。</p>
+<h3 id="最大堆">最大堆</h3>
+<p>对于最大堆这种结构，当前节点和他的两个子节点需要满足：当前节点的值必须<strong>大于或等于</strong>他的两个子节点。</p>
+<p>最大堆的构建：</p>
+<pre><code class="language-cpp">//用于初始化最大堆
+void start_sort(int size, int *heap)
+{
+    for (int i = (size - 1) / 2; i &gt;= 0; --i)
+    {
+        max_heap(i, heap, size);
+    }
+}
+//用于index节点的下沉操作。（指把index节点往下放到正确的位置，如果只是index和它的两个子节点的规则不匹配，而在它下面的结构满足最大堆，那么这个操作，可以将index这个位置加入到最大堆结构中去）
+void max_heap(int index, int *heap, int size)
+{
+    int largest = index;
+    int left = (2 * index) + 1;
+    int right = left + 1;
+    if (left &lt; size &amp;&amp; heap[left] &gt; heap[largest])
+    {
+        largest = left;
+    }
+    if (right &lt; size &amp;&amp; heap[right] &gt; heap[largest])
+    {
+        largest = right;
+    }
+    if (largest != index)
+    {
+        swap(heap[largest], heap[index]);
+        max_heap(largest, heap, size);
+    }
+}
+</code></pre>
+<h3 id="最小堆">最小堆</h3>
+<p>对于最小堆这种结构，当前节点和他的两个子节点需要满足：当前节点的值必须<strong>小于或等于</strong>他的两个子节点。</p>
+<p>最小堆的构建：</p>
+<pre><code class="language-cpp">void start_sort(int size, int *heap)
+{
+    for (int i = (size - 1) / 2; i &gt;= 0; --i)
+    {
+        min_heap(i, heap, size);
+    }
+}
+
+void min_heap(int index, int *heap, int size)
+{
+    int least = index;
+    int left = (2 * index) + 1;
+    int right = left + 1;
+    if (left &lt; size &amp;&amp; heap[left] &lt; heap[least])
+    {
+        least = left;
+    }
+    if (right &lt; size &amp;&amp; heap[right] &lt; heap[least])
+    {
+        least = right;
+    }
+    if (least != index)
+    {
+        swap(heap[least], heap[index]);
+        min_heap(least, heap, size);
+    }
+}
+</code></pre>
+<h2 id="堆排序">堆排序</h2>
+<h3 id="堆排序的原理">堆排序的原理</h3>
+<p>在我们了解最大堆和最小堆的性质之后，我们可以发现，堆顶的元素一定是最大或者最小的，那么如果我们要对一个序列进行从小到大或者从大到小，是不是可以利用这个性质呢？</p>
+<p>如果现在的堆满足最大堆，我们让他和末尾元素交换，然后让序列长度减一，然后维护最大堆，一直下去，直到序列长度为1。从而实现从小到大的排序。从大到小的排序就是利用最小堆。</p>
+<h3 id="代码实现">代码实现</h3>
+<p>下面利用最小堆实现从大到小的排序，下面是c++代码：</p>
+<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+//O(log2 n)
+void min_heap(int index, int* heap, int size)
+{
+    int least = index;
+    int left = (2 * index) + 1;
+    int right = left + 1;
+    if (left &lt; size &amp;&amp; heap[left] &lt; heap[least])
+    {
+        least = left;
+    }
+    if (right &lt; size &amp;&amp; heap[right] &lt; heap[least])
+    {
+        least = right;
+    }
+    if (least != index)
+    {
+        swap(heap[least], heap[index]);
+        min_heap(least, heap, size);
+    }
+}
+//O(n)
+void start_sort(int size, int* heap)
+{
+    for (int i = (size - 1) / 2; i &gt;= 0; --i)
+    {
+        min_heap(i, heap, size);
+    }
+}
+int main(){
+    int test[10] = {12,6,5,4,0,99,3,20,9,32};
+    int size = 10;
+    start_sort(size,test);
+    //  O（nlog2 n）
+    while(size &gt; 1){  
+         swap(test[0],test[size-1]);
+         min_heap(0,test,--size);
+    }
+    for(auto i:test) cout &lt;&lt; i &lt;&lt; &quot; &quot;;
+}
+</code></pre>
+
+          </div>
+          <div class="toc-container">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D">开始之前</a>
+<ul>
+<li><a href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E6%B7%B1%E5%BA%A6%E5%92%8C%E8%8A%82%E7%82%B9%E6%95%B0%E7%9A%84%E5%85%B3%E7%B3%BB">二叉树深度和节点数的关系</a></li>
+<li><a href="#%E6%9C%80%E5%A4%A7%E5%A0%86%E5%92%8C%E6%9C%80%E5%B0%8F%E5%A0%86">最大堆和最小堆</a>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%A0%86">什么是堆？</a></li>
+<li><a href="#%E6%9C%80%E5%A4%A7%E5%A0%86">最大堆</a></li>
+<li><a href="#%E6%9C%80%E5%B0%8F%E5%A0%86">最小堆</a></li>
+</ul>
+</li>
+<li><a href="#%E5%A0%86%E6%8E%92%E5%BA%8F">堆排序</a>
+<ul>
+<li><a href="#%E5%A0%86%E6%8E%92%E5%BA%8F%E7%9A%84%E5%8E%9F%E7%90%86">堆排序的原理</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0">代码实现</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+
+        <div class="page-count">
+          
+
+          
+        </div>
+      </div>
+
+      <div class="post-pagination inner">
+        
+        <div class="next-post">
+          <div>
+            <a href="https://Rson9.github.io/post/fan-nao-de-gao-kao-zhi-yuan/">下一篇</a>
+          </div>
+        </div>
+        
+        
+        <div class="prev-post">
+          <div>
+            <a href="https://Rson9.github.io/post/activity-de-ji-ben-yong-fa/">上一篇</a>
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+
+    <!-- back to top -->
+    <button oneclik="topFunction()" id="BackToTop">
+      TOP
+    </button>
+
+    <div class="post-comment inner">
+      <div class="post-comment">
+        
+
+
+
+
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer id="footer">
+  <div class="inner">
+    <section>
+      <h2>Follow</h2>
+      <ul class="icons">
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </section>
+    <ul class="copyright">
+      <li>
+        <a href="https://Rson9.github.io/atom.xml" target="_blank">
+          RSS
+        </a> 
+      </li>
+      <li><a href="https://github.com/wherelse/gridea-theme-phantom">Theme Phantom</a></li>
+      <li>Welcome to My Blog</li>
+      
+    </ul>
+  </div>
+</footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://Rson9.github.io/media/scripts/jquery.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/browser.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/breakpoints.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/util.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/main.js"></script>
+  
+  <script src="https://Rson9.github.io/media/scripts/prism.js"></script>
+  <script>
+    Prism.highlightAll();
+  </script>
+  
+  <script>
+    post_scroll();
+    back_to_top();
+  </script>
+</body>
+
+</html>

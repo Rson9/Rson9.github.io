@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+<meta name="description" content="秋风清，秋月明。" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>C++的链表实现 | Weak</title>
+<link rel="shortcut icon" href="https://Rson9.github.io/favicon.ico?v=1745244200358">
+<link rel="stylesheet" href="https://Rson9.github.io/styles/main.css">
+
+
+  <link rel="canonical" href="https://Rson9.github.io/post/cde-lian-biao-shi-xian/" />
+  <meta name="socialText" content="" />
+  <meta name="description" content="链表是一种线性表，在插入数据和删除数据的时候，相比于数组更加的快捷。下面是链表的实现。
+#include &amp;lt;iostream&amp;gt;
+
+// 定义链表类
+class LinkedList {
+private:
+    class Li..." />
+  <meta name="referrer" content="always" />
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/katex.min.css">
+  <script defer src="https://Rson9.github.io/media/scripts/katex.min.js"></script>
+  
+  
+  <link rel="stylesheet" href="https://Rson9.github.io/media/css/prism.css">
+  
+    
+  
+</head>
+
+<body class="is-preload">
+  <!-- Wrapper -->
+  <div id="wrapper">
+
+    <!-- Header -->
+<header id="header">
+  <div class="inner">
+    <!-- Logo -->
+    <a href="https://Rson9.github.io" class="logo">
+      <span class="symbol"
+        ><img
+          src="https://Rson9.github.io/images/avatar.png?v=1745244200358"
+          alt=""
+        />
+      </span>
+      <div class="site-title"> Weak </div>
+    </a>
+
+    <!-- Nav -->
+    <nav>
+      <ul>
+        <li><a href="#menu">Menu</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Menu -->
+<nav id="menu">
+  <ul>
+    
+    
+      <li><a href="/" class="menu">
+        首页
+      </a></li>
+      
+    
+    
+      <li><a href="/archives" class="menu">
+        归档
+      </a></li>
+      
+    
+    
+      <li><a href="/tags" class="menu">
+        标签
+      </a></li>
+      
+    
+    
+      <li><a href="/post/about" class="menu">
+        关于
+      </a></li>
+      
+    
+  </ul>
+</nav>
+
+    <!-- Main -->
+    <div id="main">
+      <div class="inner">
+        <div class="post-pagetitle">
+          <h1>
+            C++的链表实现
+          </h1>
+        </div>
+        <div class="post-info">
+          <time class="post-time">
+            2024-03-30
+          </time>
+          <span class="read-times">
+            2 min read
+          </span>
+          
+          <a href="https://Rson9.github.io/tag/shu-ju-jie-gou/" class="post-tags">
+            # 数据结构
+          </a>
+          
+        </div>
+        
+        <div class="post-content-wrapper">
+          <div class="post-content">
+            <p>链表是一种线性表，在插入数据和删除数据的时候，相比于数组更加的快捷。下面是链表的实现。</p>
+<pre><code class="language-c++">#include &lt;iostream&gt;
+
+// 定义链表类
+class LinkedList {
+private:
+    class ListNode {
+    public:
+        int data; // 存储的数据
+        ListNode* next; // 指向下一个节点的指针
+        ListNode(int value): data(value), next(nullptr) {};
+};
+public:
+    ListNode* head; // 链表的头节点
+    // 构造函数
+    LinkedList() : head(nullptr) {}
+    // 向链表中添加元素
+    void addValue(int value) {
+        ListNode* current = head;
+        if(head == nullptr) {
+            head = new ListNode(value);
+        }
+        else {
+            while(current-&gt;next!=nullptr) current = current-&gt;next;
+            current-&gt;next = new ListNode(value);
+        }
+    }
+    // 打印链表
+    void printList() {
+        ListNode* current = head;
+        while(current != nullptr){
+            std::cout &lt;&lt; current-&gt;data &lt;&lt; &quot; &quot;;
+            current = current-&gt;next;
+        }
+        std::cout&lt;&lt;'\n';
+    }
+    // 删除指定位置节点
+    void removeValue(int index){
+        ListNode* current = head;
+        ListNode* previous = nullptr;
+        for(int i = 0; i &lt; index &amp;&amp; current != nullptr; ++i){
+            previous = current;
+            current = current-&gt;next;
+        }
+        if(current != nullptr){
+            if(previous == nullptr){
+                head = current-&gt;next;
+            }
+            else {
+                previous-&gt;next = current-&gt;next;
+            }
+            delete current;
+        }
+    }
+    // 修改指定节点元素
+    void reviseValue(int index, int value){
+        ListNode* current = head;
+        for(int i = 0; i &lt; index &amp;&amp; current != nullptr; ++i){
+            current = current-&gt;next;
+        }
+        if(current == nullptr) delete current;
+        else current-&gt;data = value;
+    }
+    // 插入指定位置的元素
+    void insertValue(int index, int value){
+        ListNode* current = head;
+        ListNode* node = new ListNode(value);
+        if(head != nullptr){
+            if(index == 0){
+                node-&gt;next = head;
+                head = node;
+            }
+            else{
+                while(current!=nullptr &amp;&amp; --index){
+                    current = current-&gt;next;
+                }
+                if(current !=nullptr &amp;&amp; index == 0){
+                    node-&gt;next = current-&gt;next;
+                    current-&gt;next = node;
+                }
+            }
+        }
+        else{
+            if(index == 0){
+                head = new ListNode(value);
+            }
+        }
+}
+
+    // 析构函数
+    ~LinkedList() {
+        ListNode* current = head;
+        while (current != nullptr) {
+            ListNode* next = current-&gt;next;
+            delete current;
+            current = next;
+        }
+    }
+};
+
+</code></pre>
+
+          </div>
+          <div class="toc-container">
+            
+          </div>
+        </div>
+
+        <div class="page-count">
+          
+
+          
+        </div>
+      </div>
+
+      <div class="post-pagination inner">
+        
+        <div class="next-post">
+          <div>
+            <a href="https://Rson9.github.io/post/34-activity-de-sheng-ming-zhou-qi/">下一篇</a>
+          </div>
+        </div>
+        
+        
+        <div class="prev-post">
+          <div>
+            <a href="https://Rson9.github.io/post/35-activity-de-san-chong-qi-dong-mo-shi/">上一篇</a>
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+
+    <!-- back to top -->
+    <button oneclik="topFunction()" id="BackToTop">
+      TOP
+    </button>
+
+    <div class="post-comment inner">
+      <div class="post-comment">
+        
+
+
+
+
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer id="footer">
+  <div class="inner">
+    <section>
+      <h2>Follow</h2>
+      <ul class="icons">
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </section>
+    <ul class="copyright">
+      <li>
+        <a href="https://Rson9.github.io/atom.xml" target="_blank">
+          RSS
+        </a> 
+      </li>
+      <li><a href="https://github.com/wherelse/gridea-theme-phantom">Theme Phantom</a></li>
+      <li>Welcome to My Blog</li>
+      
+    </ul>
+  </div>
+</footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://Rson9.github.io/media/scripts/jquery.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/browser.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/breakpoints.min.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/util.js"></script>
+  <script src="https://Rson9.github.io/media/scripts/main.js"></script>
+  
+  <script src="https://Rson9.github.io/media/scripts/prism.js"></script>
+  <script>
+    Prism.highlightAll();
+  </script>
+  
+  <script>
+    post_scroll();
+    back_to_top();
+  </script>
+</body>
+
+</html>
